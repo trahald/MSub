@@ -4,6 +4,9 @@ module MSub
 
     function Unzero_monomial(mon::Monomial{C}) where {C}
         f = findall(x->x!=0, mon.z);
+        if isempty(f)
+            return 1;
+        end
         z       = zeros(Int, length(f));
         var     = PolyVar{C}[];
         i       = 0;

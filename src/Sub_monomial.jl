@@ -35,15 +35,22 @@ function Sub_monomial(mon1::Monomial{C},mon2::Monomial{C},mon3::Union{PolyVar{C}
             mon     = Monomial{C}(mon1.vars[1:(p[1]-1)], mon1.z[1:(p[1]-1)]);
         else
             mon     = Monomial{C}([mon1.vars[1]], [mon1.z[1]-mon2.z[1]]);
+            mon     = Unzero_monomial(mon);
         end
         mon     = *(mon,mon3);
-        mon     = *(mon, Monomial{C}([mon1.vars[p[1]+l2-1]], [mon1.z[p[1]+l2-1]-mon2.z[l2]]));
+        rmon    = Monomial{C}([mon1.vars[p[1]+l2-1]], [mon1.z[p[1]+l2-1]-mon2.z[l2]]);
+        rmon    = Unzero_monomial(rmon);
+        mon     = *(mon,rmon);
         for i=2:lp
             tmon    = Monomial{C}(mon1.vars[(p[i-1]+2):(p[i]-1)], mon1.z[(p[i-1]+2):(p[i]-1)]);
             mon     = *(mon,tmon);
-            mon     = *(mon,Monomial{C}([mon1.vars[p[i]]], [mon1.z[p[i]]-mon2.z[1]]));
+            lmon    = Monomial{C}([mon1.vars[p[i]]], [mon1.z[p[i]]-mon2.z[1]]);
+            lmon    = Unzero_monomial(lmon);
+            mon     = *(mon,lmon);
             mon     = *(mon,mon3);
-            mon     = *(mon, Monomial{C}([mon1.vars[p[i]+l2-1]], [mon1.z[p[i]+l2-1]-mon2.z[l2]]));
+            rmon    = Monomial{C}([mon1.vars[p[i]+l2-1]], [mon1.z[p[i]+l2-1]-mon2.z[l2]]);
+            rmon    = Unzero_monomial(rmon);
+            mon     = *(mon,rmon);
         end
         tmon    = Monomial{C}(mon1.vars[(p[end]+2):end], mon1.z[(p[end]+2):end]);
         mon     = *(mon,tmon);
