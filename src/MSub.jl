@@ -48,7 +48,7 @@ module MSub
     end
 
 
-    function Sub_monomial(mon1::Monomial{C},mon2::Monomial{C},mon3::Union{PolyVar{C},Monomial{C}}) where {C}
+    function Sub_monomial(mon1::Monomial{C},mon2::Monomial{C},mon3::Union{PolyVar{C},Monomial{C},Number}) where {C}
         mon1 = Unzero_monomial(mon1);
         mon2 = Unzero_monomial(mon2);
         p  = Find_monomial(mon1,mon2);
@@ -77,7 +77,7 @@ module MSub
 
 
 
-    function Sub_monomial(mon1::Monomial{C},mon2::PolyVar{C},mon3::Union{PolyVar{C},Monomial{C}}) where {C}
+    function Sub_monomial(mon1::Monomial{C},mon2::PolyVar{C},mon3::Union{PolyVar{C},Monomial{C},Number}) where {C}
         mon1 = Unzero_monomial(mon1);
         p  = Find_monomial(mon1,mon2);
         lp = length(p);
