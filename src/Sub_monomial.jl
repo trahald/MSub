@@ -1,38 +1,32 @@
-function Sub_monomial(mon1::Monomial{C}, 
-                      mon2::PolyVar{C}, 
-                      mon3::Union{PolyVar{C}, Monomial{C}, Number}) where {C}
-    return Sub_monomial(mon1, Monomial{C}([mon2] ,[1]), mon3);
+function Sub_monomial(mon1::Monomial{C},mon2::PolyVar{C},mon3::Union{PolyVar{C},Monomial{C},Number}) where {C}
+    return Sub_monomial(mon1, Monomial{C}([mon2],[1]), mon3);
 end
-
-function Sub_monomial(mon1::Monomial{C}, 
-                      mon2::Monomial{C}, 
-                      mon3::Union{PolyVar{C}, Monomial{C}, Number}) where {C}
-
-    mon1 = Unzero_monomial(mon1);
-    mon2 = Unzero_monomial(mon2);
-    p  = Find_monomial(mon1, mon2);
-    
-    if isempty(p)
-        return mon1;
-    end
-    
+function Sub_monomial(mon1::Monomial{C},mon2::Monomial{C},mon3::Union{PolyVar{C},Monomial{C},Number}) where {C}
+    mon1 = unzero_termlike(mon1);
+    mon2 = unzero_termlike(mon2);
+    p  = find_monomial(mon1,mon2);
     lp = length(p);
     l2 = length(mon2.z);
 
-    if l2 == 1
-        if p[1] != 1
+    if isempty(p)
+        return mon1;
+    end
+
+    if l2==1
+        # subs(mon1, variables(mon2)[1] => mon3); #Do not work with (x * y * z * x * z * y * z * x ^ 3, x, a * b) and others
+        if p[1]!=1
             mon     = Monomial{C}(mon1.vars[1:(p[1]-1)], mon1.z[1:(p[1]-1)]);
         else
-            mon = 1;
+            mon=1;
         end
-        for i = 1:mon1.z[p[1]]
-            mon     = *(mon, mon3);
+        for i=1:mon1.z[p[1]]
+            mon     = *(mon,mon3);
         end
         for i=2:lp;
             tmon    = Monomial{C}(mon1.vars[(p[i-1]+l2):(p[i]-1)], mon1.z[(p[i-1]+l2):(p[i]-1)]);
             mon     = *(mon,tmon);
             for i=1:mon1.z[p[i]]
-                mon     = *(mon, mon3)
+                mon     = *(mon,mon3)
             end
         end
         tmon    = Monomial{C}(mon1.vars[(p[end]+l2):end], mon1.z[(p[end]+l2):end]);
@@ -42,21 +36,21 @@ function Sub_monomial(mon1::Monomial{C},
             mon     = Monomial{C}(mon1.vars[1:(p[1]-1)], mon1.z[1:(p[1]-1)]);
         else
             mon     = Monomial{C}([mon1.vars[1]], [mon1.z[1]-mon2.z[1]]);
-            mon     = Unzero_monomial(mon);
+            mon     = unzero_termlike(mon);
         end
         mon     = *(mon,mon3);
         rmon    = Monomial{C}([mon1.vars[p[1]+l2-1]], [mon1.z[p[1]+l2-1]-mon2.z[l2]]);
-        rmon    = Unzero_monomial(rmon);
+        rmon    = unzero_termlike(rmon);
         mon     = *(mon,rmon);
         for i=2:lp
             tmon    = Monomial{C}(mon1.vars[(p[i-1]+2):(p[i]-1)], mon1.z[(p[i-1]+2):(p[i]-1)]);
             mon     = *(mon,tmon);
             lmon    = Monomial{C}([mon1.vars[p[i]]], [mon1.z[p[i]]-mon2.z[1]]);
-            lmon    = Unzero_monomial(lmon);
+            lmon    = unzero_termlike(lmon);
             mon     = *(mon,lmon);
             mon     = *(mon,mon3);
             rmon    = Monomial{C}([mon1.vars[p[i]+l2-1]], [mon1.z[p[i]+l2-1]-mon2.z[l2]]);
-            rmon    = Unzero_monomial(rmon);
+            rmon    = unzero_termlike(rmon);
             mon     = *(mon,rmon);
         end
         tmon    = Monomial{C}(mon1.vars[(p[end]+2):end], mon1.z[(p[end]+2):end]);
@@ -65,3 +59,9 @@ function Sub_monomial(mon1::Monomial{C},
 
     return mon; #Unzero mon?
 end
+
+
+
+#Final
+# MTermLike{C,T} = MTermLike{C,T} = Union{DynamicPolynomials.DMonomialLike{C},DynamicPolynomials.Term{C,T}};
+# sub_monomial(mon1::MTermLike{false}, mon2::DMonomialLike{false}, poly3::TermPoly{C, T}) where {C, T}
