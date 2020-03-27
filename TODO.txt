@@ -1,10 +1,10 @@
 TODO
 -Use safe syntax
---Use function to access fields
+--Use functions to access fields
 
 -Implement "Term"
---sub_monomial(MTermLikem,DMonomialLike,DMonomialLike);
-----sub_monomial(MTermLikem,x*y,-y*x); #Arg(3) is a "Term" not a monomial
+--sub_monomial(MTermLike,DMonomialLike,DMonomialLike); ✅
+----sub_monomial(MTermLike,x*y,MTermPoly); ✅
 -------Once implemented and understood term, maybe remove "Unzero_monomial" from Sub_monomial, and leave "Term".
 
 

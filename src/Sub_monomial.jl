@@ -1,7 +1,20 @@
-function Sub_monomial(mon1::Monomial{C},mon2::PolyVar{C},mon3::Union{PolyVar{C},Monomial{C},Number}) where {C}
+function Sub_monomial(
+                        mon1::MTermLike{C,T},
+                        mon2::PolyVar{C},
+                        mon3::MTermPoly{C,T}) where {C,T}
     return Sub_monomial(mon1, Monomial{C}([mon2],[1]), mon3);
 end
-function Sub_monomial(mon1::Monomial{C},mon2::Monomial{C},mon3::Union{PolyVar{C},Monomial{C},Number}) where {C}
+function Sub_monomial(
+                        mon1::Term{C,T},
+                        mon2::Monomial{C},
+                        mon3::MTermPoly{C,T}) where {C,T}
+    return coefficient(mon1)*Sub_monomial(monomial(mon1),mon2, mon3);
+end
+
+function Sub_monomial(
+                        mon1::Monomial{C},
+                        mon2::Monomial{C},
+                        mon3::MTermPoly{C,T}) where {C,T}
     mon1 = unzero_termlike(mon1);
     mon2 = unzero_termlike(mon2);
     p  = find_monomial(mon1,mon2);
@@ -60,8 +73,14 @@ function Sub_monomial(mon1::Monomial{C},mon2::Monomial{C},mon3::Union{PolyVar{C}
     return mon; #Unzero mon?
 end
 
+function Sub_monomial(
+             mon1::Number,
+             mon2::Monomial{C},
+             mon3::MTermPoly{C,T}) where {C,T}
+    return mon1;
+end
 
 
 #Final
-# MTermLike{C,T} = MTermLike{C,T} = Union{DynamicPolynomials.DMonomialLike{C},DynamicPolynomials.Term{C,T}};
-# sub_monomial(mon1::MTermLike{false}, mon2::DMonomialLike{false}, poly3::TermPoly{C, T}) where {C, T}
+# MTermLike{C,T} = Union{DynamicPolynomials.DMonomialLike{C},DynamicPolynomials.Term{C,T}};
+# sub_monomial(mon1::MTermLike{false}, mon2::DMonomialLike{false}, poly3::MTermPoly{C, T}) where {C, T}

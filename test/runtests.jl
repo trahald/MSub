@@ -28,39 +28,74 @@ end
 
 @testset "Sub_monomial" begin
 
+    @testset "Arg(1)=Number" begin
+        @test Sub_monomial(4,x*y,a)==4
+    end
+
     @testset "Same as subs" begin
         @test Sub_monomial(x*y*z*x*z*y*z*x,x*x*x*x*x*x*x*x*x*x,a)==x*y*z*x*z*y*z*x
         @test Sub_monomial(x*y*z*x*z*y*z*x,x,a)==a*y*z*a*z*y*z*a
         @test Sub_monomial(x*y*z*x*z*y*z*x,z,a)==x*y*a*x*a*y*a*x
         @test Sub_monomial(x*y*z*x^2*z*y*z*x,x,y)==y^2*z*y^2*z*y*z*y
-        #Problem: I could have to substitite x in x^2
+        #Problem 1: I could have to substitite x in x^2
         #or even worse xy^2 in x^3y^6? This case NO for NCVAR
-        #Solved?
-    end
-    @testset "take monomial put variable" begin
-        @test Sub_monomial(x*y*z*x*z*y*z*x,z*x,a)==x*y*a*z*y*a
-        @test Sub_monomial(x*y*z*x*z*y*z*x,z*x,y)==x*y^2*z*y^2
-        @test Sub_monomial(x*y*z*x^2*z*y*z*x,z*x^2,a)==x*y*a*z*y*z*x
-        @test Sub_monomial(x*y*z*x^2*z*y*z*x,z*x^3,a)==x*y*z*x^2*z*y*z*x
-    end
-    @testset "take variable put monomial" begin
-        @test Sub_monomial(x*y*z*x*z*y*z*x,x,a*b)==a*b*y*z*a*b*z*y*z*a*b
-        @test Sub_monomial(x*y*z*x*z*y*z*x^3,x,a*b)==a*b*y*z*a*b*z*y*z*a*b*a*b*a*b
+        #-->Pay attention with COMMUTATIVE at Problem1, check if subs does it
     end
 
-    @testset "take variable put number" begin
-        @test Sub_monomial(x*y*z*x*z*y*z*x,x,2)==8*y*z*z*y*z
-    end
-    @testset "take monomial put number" begin
-        @test Sub_monomial(x*y*z*x*z*y*z*x,x*y,2)==2*z*x*z*y*z*x
-        @test Sub_monomial(x*y*z*x*z*y*z*x,z*x,2)==4*x*y*z*y
+    @testset "Take variable" begin
+        @testset "take variable put number" begin
+            @test Sub_monomial(7*x*y*z*x*z*y*z*x,x,2)==56*y*z*z*y*z
+        end
+
+        @testset "take variable put monomial" begin
+            @test Sub_monomial(5*x*y*z*x*z*y*z*x,x,a*b)==5*a*b*y*z*a*b*z*y*z*a*b
+            @test Sub_monomial(x*y*z*x*z*y*z*x^3,x,a*b)==a*b*y*z*a*b*z*y*z*a*b*a*b*a*b
+        end
+
+        @testset "take variable put term" begin
+            @test Sub_monomial(5*x*y*z*x*z*y*z*x,x,3*a*b)==135*a*b*y*z*a*b*z*y*z*a*b
+            @test Sub_monomial(x*y*z*x*z*y*z*x^3,x,3*a*b)==243*a*b*y*z*a*b*z*y*z*a*b*a*b*a*b
+        end
+
+        @testset "take variable put polynomia" begin
+            @test Sub_monomial(5*y*z*x*z,x,3*a*b+1)==15*y*z*a*b*z+5*y*z^2
+            @test Sub_monomial(z*x^2*z,x,3*a*b+1)==9*z*a*b*a*b*z+6*z*a*b*z+z^2
+        end
     end
 
-    @testset "take monomial put monomial" begin
-        @test Sub_monomial(x*y*z*x*z*y*z*x,x*y,a*b)==a*b*z*x*z*y*z*x
-        @test Sub_monomial(x*y*z*x^2*z*y*z*x,z*x,a*b)==x*y*a*b*x*z*y*a*b
-        @test Sub_monomial(x^3*y*z*x^2*z,x*y,a*b)==x^2*a*b*z*x^2*z
-        @test Sub_monomial(x^3*y^2*z*x^2*z,x*y,a*b)==x^2*a*b*y*z*x^2*z
+    @testset "take monomial" begin
+        @testset "take monomial put number" begin
+            @test Sub_monomial(11*x*y*z*x*z*y*z*x,x*y,2)==22*z*x*z*y*z*x
+            @test Sub_monomial(x*y*z*x*z*y*z*x,z*x,2)==4*x*y*z*y
+        end
+
+        @testset "take monomial put variable" begin
+            @test Sub_monomial(2*x*y*z*x*z*y*z*x,z*x,a)==2*x*y*a*z*y*a
+            @test Sub_monomial(x*y*z*x*z*y*z*x,z*x,y)==x*y^2*z*y^2
+            @test Sub_monomial(3*x*y*z*x^2*z*y*z*x,z*x^2,a)==3*x*y*a*z*y*z*x
+            @test Sub_monomial(x*y*z*x^2*z*y*z*x,z*x^3,a)==x*y*z*x^2*z*y*z*x
+        end
+
+        @testset "take monomial put monomial" begin
+            @test Sub_monomial(13*x*y*z*x*z*y*z*x,x*y,a*b)==13*a*b*z*x*z*y*z*x
+            @test Sub_monomial(x*y*z*x^2*z*y*z*x,z*x,a*b)==x*y*a*b*x*z*y*a*b
+            @test Sub_monomial(17*x^3*y*z*x^2*z,x*y,a*b)==17*x^2*a*b*z*x^2*z
+            @test Sub_monomial(x^3*y^2*z*x^2*z,x*y,a*b)==x^2*a*b*y*z*x^2*z
+        end
+
+        @testset "take monomial put term" begin
+            @test Sub_monomial(13*x*y*z*x*z*y*z*x,x*y,3*a*b)==39*a*b*z*x*z*y*z*x
+            @test Sub_monomial(x*y*z*x^2*z*y*z*x,z*x,3*a*b)==9*x*y*a*b*x*z*y*a*b
+            @test Sub_monomial(17*x^3*y*z*x^2*z,x*y,3*a*b)==51*x^2*a*b*z*x^2*z
+            @test Sub_monomial(x^3*y^2*z*x^2*z,x*y,3*a*b)==3*x^2*a*b*y*z*x^2*z
+        end
+
+        @testset "take monomial put polynomia" begin
+            @test Sub_monomial(13*x*y*z*x*z*y*z*x,x*y,3*a*b+1)==39*a*b*z*x*z*y*z*x+13*z*x*z*y*z*x
+            @test Sub_monomial(x*y*z*x^2*z*y*z*x,z*x,3*a*b+1)==9*x*y*a*b*x*z*y*a*b+3*x*y*a*b*x*z*y+3*x*y*x*z*y*a*b+x*y*x*z*y
+            @test Sub_monomial(17*x^3*y*z*x^2*z,x*y,3*a*b+1)==51*x^2*a*b*z*x^2*z+17*x^2*z*x^2*z
+            @test Sub_monomial(x^3*y^2*z*x^2*z,x*y,3*a*b+1)==3*x^2*a*b*y*z*x^2*z+x^2*y*z*x^2*z
+        end
     end
 end
 

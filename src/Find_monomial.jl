@@ -8,6 +8,30 @@ function _subvectors(v::AbstractVector, l::Int)
 end
 
 """
+    unzero_termlike(term::MTermLike)
+
+Returns a Term or a Monomial where all the variables()[i] with exponents()[i]==0 are eliminated
+thus a Term or a Monomial without zeros in the exponents field.
+"""
+function unzero_termlike(ter::Term{C, T}) where {C, T}
+    return Term{C,T}(coefficient(ter), unzero_term(monomial(ter)));
+end
+function unzero_termlike(mon::Monomial{C}) where {C}
+    f = findall(x->x!=0, exponents(mon));
+    if isempty(f)
+        return 1;
+    end
+    z       = Int[];
+    var     = PolyVar{C}[];
+    i       = 0;
+    for p in f
+        push!(z,exponents(mon)[p]);
+        push!(var, variables(mon)[p]);
+    end
+
+    return Monomial{C}(var, z);
+end
+"""
     find_monomial(mon1, mon2)
 
 Returns positions where mon2 can be found in the representation of mon1.
