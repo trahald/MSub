@@ -114,7 +114,7 @@ end
             @test sub_monomial(13*x*y*z*x*z*y*z*x,x*y,3*a*b+1)==39*a*b*z*x*z*y*z*x+13*z*x*z*y*z*x
             @test sub_monomial(x*y*z*x^2*z*y*z*x,z*x,3*a*b+1)==9*x*y*a*b*x*z*y*a*b+3*x*y*a*b*x*z*y+3*x*y*x*z*y*a*b+x*y*x*z*y
             @test sub_monomial(17*x^3*y*z*x^2*z,x*y,3*a*b+1)==51*x^2*a*b*z*x^2*z+17*x^2*z*x^2*z
-            @test sub_monomial(x^3*y^2*z*x^2*z,x*y,3*a*b+1)==3*x^2*a*b*y*z*x^2*z+x^2*y*z*x^2*z
+            @test sub_monomial(x^3*y^2*z*x^2*z,x*y,3*a*b+1)==3*x^2*a*b*y*z*x^2*z+3*x*a*b*z*x^2*z+x*z*x^2*z 
             @test sub_monomial(x^3*y^2*z*x^2*z,x*y,3*a*b+c)==3*x^2*a*b*y*z*x^2*z+x^2*c*y*z*x^2*z
             @test sub_monomial(x^3*y^2*z*x^2*z+x*y*c,x*y,3*a*b+c)==3*x^2*a*b*y*z*x^2*z+x^2*c*y*z*x^2*z+3*a*b*c+c^2
         end
