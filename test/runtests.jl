@@ -4,6 +4,7 @@ using MSub
 
 @ncpolyvar x y z a b c
 
+#=
 @testset "find_monomial" begin
     @testset "Find PolyVar" begin
         @test MSub.find_monomial(x*y*z*x*z*y*x,x)==[1,4,7];
@@ -22,14 +23,31 @@ using MSub
         @test MSub.find_monomial(x*y*z*y*z^2*y*x*y*z^3,x*y*z^2)==[7];
     end
 end
+=#
 
-
-
+@testset "findfirst" begin
+    @testset "Find PolyVar" begin
+        @test findfirst(x*y*z*x*z*y*x, x)== (1, 1);
+        @test findfirst(x*y*x^2*z, x) == (1, 1);
+    end
+    @testset "Find Monomial(1)" begin
+        @test findfirst(x*y*z*x*z*y*x, Monomial{false}([x],[1])) == (1, 1);
+    end
+    @testset "Find Monomial(>1)" begin
+        @test findfirst(x*y*z*x*z^2*x*y, x*y) == (1, 2);
+        @test findfirst(x^3*y^2*z, x*y) == (1, 2);
+        @test findfirst(x*y*z*x*z^2*x*y^2, x*y^2) == (6, 2);
+        @test findfirst(x*y*z*y*z^2*y, x*y*z) == (1, 3);
+        @test findfirst(x*y*z^2*y*z^2*y, x*y*z) == (1, 3);
+        @test findfirst(x*y*z^2*y*z^2*y*x*y*z, x*y*z)==(1, 3);
+        @test findfirst(x*y*z*y*z^2*y*x*y*z^3, x*y*z^2) == (7, 3);
+    end
+end
 
 @testset "sub_monomial" begin
 
     @testset "Arg(1)=Number" begin
-        @test sub_monomial(4,x*y,a)==4
+        @test sub_monomial(4, x*y, a) == 4
     end
 
     @testset "Same as subs" begin
