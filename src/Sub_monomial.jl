@@ -78,9 +78,14 @@ function sub_monomial(
                       mon1::Monomial{C},
                       mon2::MMonomialLike{C},
                       mon3::Polynomial{C, T}) where {C, T}
-
-
-    return
+    mon1 = _reduce(mon1)
+    mon2 = _reduce(mon2)
+    factors = split(mon1, mon2)
+    if factors isa Nothing
+        return mon1
+    else
+        return sum(sub_monomial( coefficient(t)*safe_multiplication(safe_multiplication(first(factors), monomial(t)), last(factors)), mon2, mon3) for t in DynamicPolynomials.TermIterator(mon3))  
+    end
 end
 
 
