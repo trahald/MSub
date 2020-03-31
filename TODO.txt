@@ -1,9 +1,8 @@
 TODO
+-Use safe syntax
+--Use functions to access fields ✅
+
 -Implement "Term"
---Sub_monomial(mon,x*y,-y*x); #Arg(3) is a "Term" not a monomial
-----Once implemented and understood term, maybe remove "Unzero_monomial" from Sub_monomial, and leave "Term".
-
-
--Implement substitution of monomial with polynomial
---Sub_monomial(mon,x*y,1-y*x)
---Sub_monomial(mon,x*y,δ-y*x); #δ is a PolyVar{True}
+--sub_monomial(MTermLike,DMonomialLike,DMonomialLike); ✅
+----sub_monomial(MTermLike,x*y,MTermPoly); ✅
+-------Once implemented and understood term, maybe remove "Unzero_monomial" from Sub_monomial, and leave "Term".
